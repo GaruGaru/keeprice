@@ -85,7 +85,15 @@ func (s InfluxDBStorage) Get(siteID string, productID string) (models.ItemPriceH
 		return models.ItemPriceHistory{}, err
 	}
 
+	if len(response.Results[0].Series) == 0 {
+		return models.ItemPriceHistory{}, nil
+	}
+
 	series := response.Results[0].Series[0]
+
+	if len(series.Columns) == 0 {
+		return models.ItemPriceHistory{}, nil
+	}
 
 	var results []models.ItemPriceHistoryEntry
 

@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	result, err := priceStorage.Get("tannico", "vino-buono")
+	result, err := priceStorage.Get("tannico", "vino-cattivo")
 
 	if err != nil {
 		panic(err)
