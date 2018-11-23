@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/GaruGaru/keeprice/api"
 	"github.com/GaruGaru/keeprice/models"
 	"github.com/GaruGaru/keeprice/storage"
 	"time"
@@ -29,16 +29,14 @@ func main() {
 		panic(err)
 	}
 
-	result, err := priceStorage.Get("tannico", "vino-cattivo")
+	keepriceApi := api.Api{
+		Storage: priceStorage,
+	}
+
+	err = keepriceApi.Run("0.0.0.0:8976")
 
 	if err != nil {
 		panic(err)
-	}
-
-	fmt.Printf("got %d results\n", result.Count)
-
-	for _, r := range result.History {
-		fmt.Printf("%f - %s\n", r.Price, time.Unix(r.Time, 0).String())
 	}
 
 }
@@ -46,7 +44,7 @@ func main() {
 func WriteTestData(priceStorage storage.PriceStorage) {
 	for i := 0; i < 1000; i++ {
 
-		price := models.ItemPrice{
+		price := models.ProductPrice{
 			SiteID:       "tannico",
 			ProductID:    "vino-buono",
 			ProductPrice: float32(i),

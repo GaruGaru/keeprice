@@ -40,7 +40,7 @@ func NewInfluxDBStorage(config InfluxClientConfig) (InfluxDBStorage, error) {
 	}, nil
 }
 
-func (s InfluxDBStorage) Store(itemPrice models.ItemPrice) error {
+func (s InfluxDBStorage) Store(itemPrice models.ProductPrice) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  s.database,
 		Precision: "s",
@@ -74,7 +74,13 @@ func (s InfluxDBStorage) Store(itemPrice models.ItemPrice) error {
 	return nil
 }
 
-func (s InfluxDBStorage) Get(siteID string, productID string) (models.ItemPriceHistory, error) {
+
+func (s InfluxDBStorage) Get(siteID string, productID string) (models.ProductPriceHistory, error) {
+
+	EmptyHistory := models.ProductPriceHistory{
+		History: []models.ProductPriceHistoryEntry{},
+	}
+
 	//queryTemplate := `SELECT "price" FROM "%s"."autogen"."prices" WHERE "product_id"='%s' AND "site_id"='%s' GROUP BY time(1d) ORDER BY time DESC`
 	queryTemplate := `SELECT mean("price") FROM "%s"."autogen"."prices" WHERE "product_id"='%s' AND "site_id"='%s' GROUP BY time(10s) ORDER BY time DESC`
 	query := fmt.Sprintf(queryTemplate, s.database, productID, siteID)
@@ -82,20 +88,20 @@ func (s InfluxDBStorage) Get(siteID string, productID string) (models.ItemPriceH
 	response, err := s.client.Query(client.NewQuery(query, s.database, "s"))
 
 	if err != nil {
-		return models.ItemPriceHistory{}, err
+		return EmptyHistory, err
 	}
 
 	if len(response.Results[0].Series) == 0 {
-		return models.ItemPriceHistory{}, nil
+		return EmptyHistory, nil
 	}
 
 	series := response.Results[0].Series[0]
 
 	if len(series.Columns) == 0 {
-		return models.ItemPriceHistory{}, nil
+		return EmptyHistory, nil
 	}
 
-	var results []models.ItemPriceHistoryEntry
+	var results []models.ProductPriceHistoryEntry
 
 	for _, val := range series.Values {
 		if val[1] == nil {
@@ -105,22 +111,22 @@ func (s InfluxDBStorage) Get(siteID string, productID string) (models.ItemPriceH
 		price, err := val[1].(json.Number).Float64()
 
 		if err != nil {
-			return models.ItemPriceHistory{}, err
+			return EmptyHistory, err
 		}
 
 		timestamp, err := val[0].(json.Number).Int64()
 
 		if err != nil {
-			return models.ItemPriceHistory{}, err
+			return EmptyHistory, err
 		}
 
-		results = append(results, models.ItemPriceHistoryEntry{
+		results = append(results, models.ProductPriceHistoryEntry{
 			Time:  timestamp,
 			Price: float32(price),
 		})
 
 	}
-	return models.ItemPriceHistory{
+	return models.ProductPriceHistory{
 		Count:       len(results),
 		PeriodStart: results[len(results)-1].Time,
 		PeriodEnd:   results[0].Time,
