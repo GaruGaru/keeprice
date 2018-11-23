@@ -1,0 +1,7 @@
+# github.com/influxdata/influxdb v1.7.1
+github.com/influxdata/influxdb/client/v2
+github.com/influxdata/influxdb/models
+github.com/influxdata/influxdb/pkg/escape
+# github.com/influxdata/platform v0.0.0-20181121224200-2cac5f30dca8
+github.com/influxdata/platform/models
+github.com/influxdata/platform/pkg/escape
