@@ -15,8 +15,8 @@ type Api struct {
 
 func (a Api) initRouting(router *mux.Router) {
 	router.HandleFunc("/probe", a.probe)
-	router.HandleFunc("/product/", a.addPrice).Methods("POST")
-	router.HandleFunc("/product/", a.priceHistory).Methods("GET")
+	router.HandleFunc("/product", a.addPrice).Methods("POST")
+	router.HandleFunc("/product", a.priceHistory).Methods("GET")
 }
 
 func (a Api) Run(addr string) error {
