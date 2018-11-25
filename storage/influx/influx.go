@@ -1,4 +1,4 @@
-package storage
+package influx
 
 import (
 	"encoding/json"
@@ -8,14 +8,7 @@ import (
 	"time"
 )
 
-type InfluxClientConfig struct {
-	Addr     string
-	Username string
-	Password string
-	DB       string
-}
-
-func NewInfluxClient(config InfluxClientConfig) (client.Client, error) {
+func NewInfluxClient(config ClientConfig) (client.Client, error) {
 	return client.NewHTTPClient(client.HTTPConfig{
 		Addr:     config.Addr,
 		Username: config.Username,
@@ -29,7 +22,7 @@ type InfluxDBStorage struct {
 	database string
 }
 
-func NewInfluxDBStorage(config InfluxClientConfig) (InfluxDBStorage, error) {
+func NewInfluxDBStorage(config ClientConfig) (InfluxDBStorage, error) {
 	influxClient, err := NewInfluxClient(config)
 	if err != nil {
 		return InfluxDBStorage{}, err
@@ -38,6 +31,10 @@ func NewInfluxDBStorage(config InfluxClientConfig) (InfluxDBStorage, error) {
 		client:   influxClient,
 		database: config.DB,
 	}, nil
+}
+
+func (s InfluxDBStorage) Init() error {
+	return nil
 }
 
 func (s InfluxDBStorage) Store(itemPrice models.ProductPrice) error {
@@ -73,7 +70,6 @@ func (s InfluxDBStorage) Store(itemPrice models.ProductPrice) error {
 
 	return nil
 }
-
 
 func (s InfluxDBStorage) Get(siteID string, productID string) (models.ProductPriceHistory, error) {
 
