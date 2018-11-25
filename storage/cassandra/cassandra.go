@@ -56,7 +56,7 @@ func (s CassandraStorage) Init() error {
 }
 
 func (s CassandraStorage) Store(itemPrice models.ProductPrice) error {
-	queryTemplate := `INSERT INTO %s (site_id, product_id, time, price) VALUES (%s, %s, %d, %f)`
+	queryTemplate := `INSERT INTO %s (site_id, product_id, time, price) VALUES ('%s', '%s', %d, %f)`
 	query := fmt.Sprintf(queryTemplate, s.tableName(), itemPrice.SiteID, itemPrice.ProductID, itemPrice.Time, itemPrice.ProductPrice)
 	return s.session.Query(query).Exec()
 }
