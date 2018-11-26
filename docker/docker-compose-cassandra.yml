@@ -1,6 +1,13 @@
 version: '3.3'
 services:
 
+  keeprice-api:
+    image: garugaru/keeprice
+    build: ../
+    ports:
+      - "8976:8976"
+
+
   keeprice-cassandra-00:
     image: bitnami/cassandra
     ports:

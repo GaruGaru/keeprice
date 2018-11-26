@@ -1,19 +1,25 @@
 version: '3.3'
 services:
 
+  keeprice-api:
+    image: garugaru/keeprice
+    build: ../
+    ports:
+      - "8976:8976"
+
   keeprice-influxdb:
     image: influxdb:latest
     ports:
-    - "8083:8083"
-    - "8086:8086"
-    - "8090:8090"
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
     environment:
-    - INFLUXDB_DB=keeprice
-    - INFLUXDB_ADMIN_USER=keeprice
-    - INFLUXDB_ADMIN_PASSWORD=keeprice-password
+      - INFLUXDB_DB=keeprice
+      - INFLUXDB_ADMIN_USER=keeprice
+      - INFLUXDB_ADMIN_PASSWORD=keeprice-password
 
   keeprice-chronograf:
     image: chronograf
     command:  chronograf --influxdb-url=http://keeprice-influxdb:8086
     ports:
-    - 8888:8888
+      - 8888:8888
