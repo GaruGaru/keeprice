@@ -8,36 +8,28 @@ import (
 	"time"
 )
 
-func NewInfluxClient(config ClientConfig) (client.Client, error) {
-	return client.NewHTTPClient(client.HTTPConfig{
-		Addr:     config.Addr,
-		Username: config.Username,
-		Password: config.Password,
-		Timeout:  15 * time.Second,
-	})
-}
 
-type InfluxDBStorage struct {
+type Storage struct {
 	client   client.Client
 	database string
 }
 
-func NewInfluxDBStorage(config ClientConfig) (InfluxDBStorage, error) {
+func NewInfluxDBStorage(config ClientConfig) (Storage, error) {
 	influxClient, err := NewInfluxClient(config)
 	if err != nil {
-		return InfluxDBStorage{}, err
+		return Storage{}, err
 	}
-	return InfluxDBStorage{
+	return Storage{
 		client:   influxClient,
 		database: config.DB,
 	}, nil
 }
 
-func (s InfluxDBStorage) Init() error {
+func (s Storage) Init() error {
 	return nil
 }
 
-func (s InfluxDBStorage) Store(itemPrice models.ProductPrice) error {
+func (s Storage) Store(itemPrice models.ProductPrice) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  s.database,
 		Precision: "s",
@@ -71,7 +63,7 @@ func (s InfluxDBStorage) Store(itemPrice models.ProductPrice) error {
 	return nil
 }
 
-func (s InfluxDBStorage) Get(siteID string, productID string) (models.ProductPriceHistory, error) {
+func (s Storage) Get(siteID string, productID string) (models.ProductPriceHistory, error) {
 
 	EmptyHistory := models.ProductPriceHistory{
 		History: []models.ProductPriceHistoryEntry{},
