@@ -12,7 +12,6 @@ type ClientConfig struct {
 	DB       string
 }
 
-
 func NewInfluxClient(config ClientConfig) (client.Client, error) {
 	return client.NewHTTPClient(client.HTTPConfig{
 		Addr:     config.Addr,

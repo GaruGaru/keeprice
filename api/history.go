@@ -40,5 +40,3 @@ func (a Api) priceHistory(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(jsonResponse)
 
 }
-
-

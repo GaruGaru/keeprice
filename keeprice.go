@@ -12,7 +12,7 @@ import (
 func main() {
 	store := cmd.CassandraStorage()
 
-//	WriteTestData(store)
+	//	WriteTestData(store)
 
 	_, _ = store.Get("tannico", "vino-buono")
 
@@ -34,7 +34,7 @@ func WriteTestData(priceStorage storage.PriceStorage) {
 		price := models.ProductPrice{
 			SiteID:       "tannico",
 			ProductID:    "vino-buono",
-			ProductPrice: float32(i)+rand.Float32(),
+			ProductPrice: float32(i) + rand.Float32(),
 			Time:         int64(i),
 		}
 

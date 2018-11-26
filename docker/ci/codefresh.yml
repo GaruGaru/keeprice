@@ -1,0 +1,20 @@
+version: '1.0'
+steps:
+
+  build_production_image:
+    title: Building Production Image
+    type: build
+    image_name: garugaru/keeprice
+    working_directory: ${{main_clone}}
+    dockerfile: Dockerfile
+    tag: '${{CF_SHORT_REVISION}}'
+
+  push_image:
+    type: push
+    title: Image push
+    candidate: ${{build_production_image}}
+    tags:
+      - ${{CF_SHORT_REVISION}}
+      - 'latest'
+      - ${{CF_BRANCH_TAG_NORMALIZED}}
+    fail_fast: true

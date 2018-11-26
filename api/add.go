@@ -25,4 +25,3 @@ func (a Api) addPrice(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write([]byte{})
 }
-

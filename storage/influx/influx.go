@@ -8,7 +8,6 @@ import (
 	"time"
 )
 
-
 type Storage struct {
 	client   client.Client
 	database string

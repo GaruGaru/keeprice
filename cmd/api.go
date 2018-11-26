@@ -34,7 +34,7 @@ var apiCmd = &cobra.Command{
 			panic(err)
 		}
 
-		keepriceApi := api.Api{Storage: priceStorage,}
+		keepriceApi := api.Api{Storage: priceStorage}
 
 		err = keepriceApi.Run("0.0.0.0:8976")
 
@@ -44,7 +44,7 @@ var apiCmd = &cobra.Command{
 	},
 }
 
-func init()  {
+func init() {
 	rootCmd.AddCommand(apiCmd)
 }
 

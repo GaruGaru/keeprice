@@ -11,9 +11,7 @@ var rootCmd = &cobra.Command{
 	Short: "general purpose e-shop price scraper backend storage",
 }
 
-
 func init() {
-
 
 }
 
